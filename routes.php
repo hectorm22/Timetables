@@ -14,7 +14,7 @@ $controller->{$action}();
 
 
 //an array, for the allowed controllers and their respective actions
-$controllers = array('userManagement' => ['all','showAll','add','delete'],
+$controllers = array('userManagement' => ['home','checkLogin','all','showAll','showPassword', 'add','delete'],
                       'taskManagement' => ['all','showAll','allFromUser','delete','add']);
 
 

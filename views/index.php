@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form to JSON</title>
-</head>
-<body>
+<?php include "header.php"?>
 
+<div>
 <form id="myForm">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" required>
@@ -14,53 +8,94 @@
     <label for="password">password:</label>
     <input type="password" id="password" name="password" required>
 
-    <button type="button" onclick="submitForm()">Submit</button>
+    <button type="submit" value="Submit" id = "jsonTest">Insert</button>
+</form>
+<br>
+<br>
+
+<form action="https://cs.csub.edu/~flin/3350/lab05/index.php?controller=userManagement&action=delete" method="post">
+    <label for="id">User ID:</label>
+    <input type="text" id="id" name="id" required>
+    <button type="submit" value="delete">delete</button>
 </form>
 
-<div id="responseMessage"></div>
+<!-- Your HTML form or any trigger element -->
+<button id="getDataButton">Get Data</button>
+
+<div id="result"></div>
+
+</div>
 
 <script>
 
-function submitForm() {
-    // Get form data
-    const formData = new FormData(document.getElementById('myForm'));
+    $(document).ready(function(){
+    $("#myForm").submit(function(e) {
+        var urlAPI = "https://cs.csub.edu/~flin/3350/lab05/index.php?controller=userManagement&action=add";
 
-    // Convert FormData to JSON
-    const jsonData = {};
-    formData.forEach((value, key) => {
-        jsonData[key] = value;
+        $.ajax({
+            type: "POST",
+            url: urlAPI,
+            data: $("#myForm").serialize(),
+            success: function(data) {
+                console.log("Response from the server:", data);
+               // alert("Response from the server:\n" + JSON.stringify(data));
+               // Redirect to the specified page
+               // window.location.href = "#";
+            },
+            error: function(xhr, status, error) {
+                console.error("Error in AJAX request:", error);
+                alert("Error in AJAX request:\n" + error);
+            },
+            complete: function() {
+                console.log("AJAX request completed.");
+            }
+        });
+        showProducts();
+
+        e.preventDefault();
+    });
     });
 
-    // Convert JSON data to a string
-    const jsonString = JSON.stringify(jsonData);
 
-    // Send POST request to PHP server
-    fetch('../index.php?controller=userManagement&action=add', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: jsonString,
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Display success message or update UI
-        document.getElementById('responseMessage').innerHTML = 'Server response: ' + JSON.stringify(data);
-    })
-    .catch(error => {
-        // Display error message or update UI
-        console.error('Error:', error);
-        document.getElementById('responseMessage').innerHTML = 'Error: ' + error.message;
+    $(document).ready(function() {
+    $("#getDataButton").click(function() {
+        // AJAX request
+        $.ajax({
+            type: "GET", // or "POST" depending on your server-side logic
+            url: "https://cs.csub.edu/~flin/3350/lab05/index.php?controller=userManagement&action=showAll", // Replace with the actual path to your PHP script
+            dataType: "json", // Expecting JSON response, adjust based on your needs
+            success: function(data) {
+                console.log("Data received from the server:", data);
+
+                // Process and use the data as needed
+                // For example, update the DOM with the received data
+                $("#result").html("Received data: " + data);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error in AJAX request:", error);
+            }
+        });
     });
-}
+    });
 
+
+    function showProducts() {
+        $.get("https://cs.csub.edu/~flin/3350/lab05/index.php?controller=userManagement&action=showAll", function (data) {
+            $("#result").html(data);
+        });
+    }
+
+    function deleteProductAJAX($event) {
+        $.ajax({
+                url: $event,
+                success: function(response) {
+                    //alert(response);
+                }
+            });
+        event.preventDefault();
+        showProducts();
+    }
+    
 </script>
 
-</body>
-</html>
-
+<?php include "footer.php"?>

@@ -122,12 +122,15 @@ class DB
         */        
                 public function bindMore($parray)
                 {
-                        if(empty($this->parameters) && is_array($parray)) {
-                                $columns = array_keys($parray);
-                                foreach($columns as $i => &$column)        {
-                                        $this->bind($column, $parray[$column]);
-                                }
+                    if(is_array($parray)) {
+                        if(empty($this->parameters)){
+                            $this->parameters = [];
                         }
+                        $columns = array_keys($parray);
+                        foreach($columns as $i => &$column){
+                            $this->bind($column, $parray[$column]);
+                        }
+                    }
                 }
        /**
         *         If the SQL query contains a SELECT statement it returns an array containing all of the result set row
@@ -142,7 +145,7 @@ class DB
                 {
                         $query = trim($query);
 
-                        $this->Init($query,$params);
+                       $this->Init($query,$params);
 
                         if (stripos($query, 'select') === 0){
 							if ($fetchmode == 8) {

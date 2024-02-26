@@ -1,4 +1,4 @@
 ;<?php return; ?>
 [SQL]
-dbpath = ./
+dbpath = /home/stu/flin/public_html/3350/lab05/
 dbname = lab05.db
