@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h3>Task Form</h3>
+            <form id="task-form">
+                <div class="form-group bg-light">
+                    <label for="task-name-input">Task Name</label>
+                    <input id="task-name-input" class="form-control" type="text" name="task_name">
+                </div>
+                <div class="form-group bg-light">
+                    <label for="task-desc-input">Task Description</label>
+                    <textarea class="form-control" id="task-desc-input" rows="3" name="task_description"></textarea>
+                  </div>
+                  <label>Task Type</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="task_type" id="reminding-input" value="0" checked>
+                    <label class="form-check-label" for="reminding-input">Reminding - Suitable for niche activities and remains in place after it's specified end date & time.</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="task_type" id="expiring-input" value="1">
+                    <label class="form-check-label" for="expiring-input">Expiring - Suitable for due dates and is erased after the specified end date and time.</label>
+                  </div>
+                  <br>
+                  <div class="form-row bg-light">
+                    <div class="col">
+                        <label for="start-datetime-input">Task Start Date & Time</label>
+                        <input class="form-control" type="datetime-local" name="starting_time" id="start-datetime-input">
+                    </div>
+                    <div class="col">
+                        <label for="end-datetime-input">Task End Date & Time</label>
+                        <input class="form-control" type="datetime-local" name="ending_time" id="end-datetime-input">
+                    </div>
+                  </div>
+                  <br>
+                  <button id="form-submit-btn" class="btn btn-primary" type="submit">Submit</button>
+            </form>
+        </div>
+    </body>
+</html>
+<script>
+    $("#form-submit-btn").click(function(){
+        event.preventDefault();
+
+        let formData = Object.fromEntries(new FormData(document.getElementById("task-form")).entries());
+
+        for (const key in formData) {
+            if (formData[key].length == 0) {
+                alert(`Missing field: ${key} `)
+                return;
+            }
+        }
+
+        let unixStartTime = Date.parse(formData.starting_time);
+        let unixEndTime = Date.parse(formData.ending_time);
+        
+        if (unixEndTime <= unixStartTime) {
+            alert("End date and time cannot be lower than or equal to the start date and time.")
+            return;
+        }
+
+        // convert task_type from string to int
+        formData.task_type = parseInt(formData.task_type);
+        
+        let JSONBody = JSON.stringify(formData);
+        
+        console.log(JSONBody);
+        
+        $.ajax({
+            type: "POST",
+            url: "https://cs.csub.edu/~flin/3350/lab05/index.php?controller=taskManagement&action=add",
+            data: JSONBody,
+            dataType: "json",
+            success: function(data) {
+                console.log("Response: ", data);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error in AJAX request:", error);
+            }
+        });
+    });
+</script>
