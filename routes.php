@@ -15,7 +15,7 @@ $controller->{$action}();
 
 //an array, for the allowed controllers and their respective actions
 $controllers = array('userManagement' => ['home','checkLogin','all','showAll','showPassword', 'add','delete'],
-                      'taskManagement' => ['all','showAll','allFromUser','delete','add']);
+                      'taskManagement' => ['all','showAll','delete','add']);
 
 
   //we check, if the invoked action is part of our mvc code
@@ -24,7 +24,7 @@ $controllers = array('userManagement' => ['home','checkLogin','all','showAll','s
     if (in_array($action, $controllers[$controller])) {
       call($controller, $action);
     } else {
-      call('errorController', 'error');
+       call('errorController', 'error');
     }
   } else {
     call('errorController', 'error');

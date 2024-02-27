@@ -1,8 +1,12 @@
 <?php 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
+    //header("Location: login.php");
 }
-$username=$_SESSION["username"]
+else{
+    $username=$_SESSION["username"];
+}
+
 ?>
 
 <!doctype html>

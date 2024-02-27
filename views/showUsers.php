@@ -1,5 +1,5 @@
 <?php
-require_once("../functions/displayJSON.php");
+require_once("./functions/displayJSON.php");
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -10,4 +10,7 @@ if (isset($_SESSION['userData'])) {
 
     // Usage
     displayJsonAsTable($userData);
+}
+else{
+    echo 'The session variable is NULL';
 }

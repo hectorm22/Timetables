@@ -26,6 +26,60 @@ CREATE TABLE `user_roles` (
   CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS `tasks`;
+CREATE TABLE tasks (
+    task_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    task_name TEXT NOT NULL,
+    task_description TEXT,
+    task_type int(11) DEFAULT 0,
+    starting_time DATETIME,
+    ending_time DATETIME,
+    status int(11) DEFAULT 0,
+    username TEXT,
+    FOREIGN KEY (username) REFERENCES user(username)
+);
+
+UPDATE tasks
+SET username = (
+    SELECT username
+    FROM user
+    ORDER BY RANDOM()
+    LIMIT 1
+)
+WHERE tasks.rowid = (SELECT abs(random()) % (SELECT max(rowid) FROM user) + 1);
+
+update tasks 
+set username = (
+  select username 
+  from user 
+  order by random() 
+  limit 1
+) 
+where task_id = (
+  select rowid from tasks
+);
+
+SELECT count(*)
+FROM tasks
+WHERE starting_time <= CURRENT_TIMESTAMP AND ending_time >= CURRENT_TIMESTAMP;
+
+SELECT count(*)
+FROM tasks
+WHERE DATE(starting_time) <= DATE(CURRENT_TIMESTAMP) AND DATE(ending_time) >= DATE(CURRENT_TIMESTAMP);
+
+SELECT count(*)
+FROM tasks
+WHERE strftime('%H:%M:%S', starting_time) <= strftime('%H:%M:%S', CURRENT_TIMESTAMP)
+  AND strftime('%H:%M:%S', ending_time) >= strftime('%H:%M:%S', CURRENT_TIMESTAMP);
+
+
+
+
+
+
+
+
+
 
 
 

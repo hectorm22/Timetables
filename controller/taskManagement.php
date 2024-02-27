@@ -1,71 +1,20 @@
 <?php
-
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
 
-class userManagement{
+
+
+class taskManagement{
     
-    function home(){
-
-        //header("views/logout.php");
-        require_once("views/login.php");
-    }
-    
-    //Check Login
-    function checkLogin(){
-        // Retrieve the username from the query parameters
-        if ($_SERVER["REQUEST_METHOD"] === "POST"){
-        //if (isset($_POST["login_submit"])){
-            if(isset($_POST["username"]) && isset($_POST["userPIN"]) ) {
-                $username = htmlspecialchars($_POST["username"]);
-                $password = htmlspecialchars($_POST["userPIN"]);
-
-                try{
-                    $pw=user_model::get_password($username);
-                    $stored_password = $pw[0]['password'];
-
-                    // Validate password entered by user
-                    if (password_verify($password, $stored_password)) {
-                    
-                        // Password is valid
-                        $_SESSION["username"] = $username;
-                        header("Location: views/index.php");
-                        // header('Content-Type: application/json');
-                        // echo json_encode($pw);
-                    } 
-                    else {
-                        // Password is invalid
-                        echo "Login again";
-          
-                    } 
-                }
-                catch (Exception $e) {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(['error' => $e->getMessage()]);
-                    }
-
-
-            }
-            else{
-                echo 'null';
-            }
-        }else{
-            echo "error";
-        }
-
-
-    }
-
-
     //return all the users
     function all(){
         //use the model to get all the comments from the database
-        $users=user_model::all();
+        $users=task_model::all();
         
         // Usage
         $json_users = json_encode($users, true);
@@ -74,17 +23,17 @@ class userManagement{
         // First PHP file
         $_SESSION['userData'] = $json_users;
     
-        require_once("views/showUsers.php");
-        //header("Location: views/showUsers.php");
+        //require_once("views/showUsers.php");
+        header("Location: views/showUsers.php");
     }
 
     //AJAX
     function showAll(){
         try{
-            $users=user_model::all();
+            $tasks=task_model::all();
         
             header('Content-Type: application/json');
-            echo json_encode($users);
+            echo json_encode($tasks);
         
         } catch (Exception $e) {
             http_response_code(500); // Internal Server Error

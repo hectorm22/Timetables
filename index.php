@@ -1,6 +1,12 @@
 <?php
+date_default_timezone_set('America/Los_Angeles');
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', '/home/flin/public_html/3350/loab05/lab05_error_log');
+
+
 
 require_once("dbClass.php");
 //require_once("./views/nav.php");
