@@ -16,12 +16,14 @@ other
 # Define Objects Right Now
 
 - DB class: simplify the sqlite operation (https://github.com/DiseaseNO/PDO-SQLite-Class)
-- userManagerment class: receive the API operations of userManagement
+- userManagement class: receive the API operations of userManagement
 - user_model class: the functions of the CRUD of user management  
+- taskManagement class: receive the API operations of taskManagement
+- task_model class: the function of the CRUD of task management
 
 # Functions and API
 
-## API Test
+## API
 
 - default: '/', it redirects the views/index.php
 - all: "../index.php?controller=userManagement&action=all". It will get all users by JSON format.
@@ -38,3 +40,8 @@ other
 - function delete($id):
 - function add($name, $password):
 
+## Client Test
+- Using Js to get data and print data
+- Using AJAX to get data and print data
+- using AJAX to post data and excute the statement
+- Using html to poset data
