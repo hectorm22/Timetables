@@ -88,5 +88,18 @@
 </html>
 <script>
     $(document).ready(function(){
+        var urlAPI = "https://cs.csub.edu/~flin/3350/lab05/index.php?controller=userManagement&action=add";
+
+        $.ajax({
+            type: "GET",
+            url: "https://cs.csub.edu/~flin/3350/lab05/index.php?controller=userManagement&action=showAll",
+            dataType: "json",
+            success: function(data) {
+                console.log("Data received from the server:", data);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error in AJAX request:", error);
+            }
+        });
     });
 </script>
