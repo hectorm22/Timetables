@@ -1,6 +1,6 @@
 <?php
 
-class erro_model{
+class errorController{
 
     function error(){
         echo "Pages not exist";
