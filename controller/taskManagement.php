@@ -42,27 +42,57 @@ class taskManagement{
     }
 
     //AJAX
-    function showDataByTwo(){
+    function showSummary(){
+        if (isset($_GET['username'])){
+            $name = htmlspecialchars($_GET['username']);
 
-        if (isset($_GET['username'])&& isset($_GET['datetime'])){
-            $username = htmlspecialchars($_GET['username']);
-            $datetime = date(htmlspecialchars($_GET['datetime']));
-
-            try{
-                $tasks=task_model::get_data_by_two($username, $datetime);
-                header('Content-Type: application/json');
-                echo json_encode($tasks, JSON_PRETTY_PRINT);
-        
-            } catch (Exception $e) {
-                http_response_code(500); // Internal Server Error
-                echo json_encode(['error' => $e->getMessage()]);
-            }
         }else{
-            echo 'test';
+            $name = 'demo';
+        }
+            // Get the current time
+            $currentTimestamp = time();  // Current timestamp
+
+            // Get the timestamp for 30 days ago
+            $startTimestamp = strtotime('-30 days', $currentTimestamp);
+
+            // Convert timestamps to date strings
+            $currentTime = date('Y-m-d H:i:s', $currentTimestamp);
+            $startTime = date('Y-m-d H:i:s', $startTimestamp);
+
+        try{
+            $tasks=task_model::get_summary($name,$currentTime,$startTime);
+            header('Content-Type: application/json');
+            echo json_encode($tasks, JSON_PRETTY_PRINT);
+        
+        } catch (Exception $e) {
             http_response_code(500); // Internal Server Error
             echo json_encode(['error' => $e->getMessage()]);
         }
+        
     }
+
+        //AJAX
+        function showDataByTwo(){
+
+            if (isset($_GET['username'])&& isset($_GET['datetime'])){
+                $username = htmlspecialchars($_GET['username']);
+                $datetime = date(htmlspecialchars($_GET['datetime']));
+    
+                try{
+                    $tasks=task_model::get_data_by_two($username, $datetime);
+                    header('Content-Type: application/json');
+                    echo json_encode($tasks, JSON_PRETTY_PRINT);
+            
+                } catch (Exception $e) {
+                    http_response_code(500); // Internal Server Error
+                    echo json_encode(['error' => $e->getMessage()]);
+                }
+            }else{
+                echo 'test';
+                http_response_code(500); // Internal Server Error
+                echo json_encode(['error' => $e->getMessage()]);
+            }
+        }
 
     //Get Password By inputting username
     function showData(){
@@ -107,6 +137,106 @@ class taskManagement{
         //require_once("view/deleteUser.php");
     }
 
+    // update the task status by username and id
+    function updateStatus(){
+        // Get the raw JSON data from the request body
+        if ($_SERVER["REQUEST_METHOD"] === "POST"){
+            // Retrieve raw POST data
+            $rawData = file_get_contents("php://input");
+
+            // Decode JSON data
+            $jsonData = json_decode($rawData, true);
+
+            if ($jsonData !== null) {
+                //check username
+                if (isset($jsonData['username']) && $jsonData['username'] != null){
+                    $username = $jsonData['username'];
+                }
+                else{
+                    $username = 'demo';
+                }
+
+                //check task id
+                //check username
+                if (isset($jsonData['task_id']) && $jsonData['task_id'] != null){
+                    $tid = $jsonData['task_id'];
+                }
+                else{
+                    $tid = '267';
+                }
+
+                try{
+                    $ret=task_model::update_status($username, $tid);
+                
+                    echo 'update successful';
+                    } 
+                catch (Exception $e) {
+                        http_response_code(500); // Internal Server Error
+                        echo json_encode(['error' => $e->getMessage()]);
+                    }
+                }else{
+                    echo 'No values submit';
+                }
+            }else{
+                echo 'no post method';
+            }
+    }
+
+    // update form by username and task id
+    function updateForm(){
+        // Get the raw JSON data from the request body
+        if ($_SERVER["REQUEST_METHOD"] === "POST"){
+            // Retrieve raw POST data
+            $rawData = file_get_contents("php://input");
+
+            // Decode JSON data
+            $jsonData = json_decode($rawData, true);
+
+            if ($jsonData !== null) {
+                // Access the data using keys
+                $task_name = $jsonData['task_name'];
+                $task_description = $jsonData['task_description'];
+                $task_type = $jsonData["task_type"];    
+                $starting_time = $jsonData["starting_time"]; 
+                $ending_time = $jsonData["ending_time"];
+
+                //check username
+                if (isset($jsonData['username']) && $jsonData['username'] != null){
+                    $username = $jsonData['username'];
+                }
+                else{
+                    $username = 'demo';
+                }
+
+                //check task id
+                //check username
+                if (isset($jsonData['task_id']) && $jsonData['task_id'] != null){
+                    $tid = $jsonData['task_id'];
+                }
+                else{
+                    $tid = '267';
+                }
+
+                try{
+                    $ret=task_model::update_form($task_name, $task_description, $task_type, $starting_time, $ending_time, $username, $tid);
+                
+                    echo 'update successful';
+                    } 
+                catch (Exception $e) {
+                        http_response_code(500); // Internal Server Error
+                        echo json_encode(['error' => $e->getMessage()]);
+                    }
+                }else{
+                    echo 'No values submit';
+                }
+            }else{
+                echo 'no post method';
+            }
+
+    }
+
+
+
 //**********************************************
 //   Check Post
 //*********************************************
@@ -128,6 +258,12 @@ class taskManagement{
                 $task_type = $jsonData["task_type"];    
                 $starting_time = $jsonData["starting_time"]; 
                 $ending_time = $jsonData["ending_time"]; 
+                if (isset($jsonData['username']) && $jsonData['username'] != null){
+                    $username = $jsonData['username'];
+                }
+                else{
+                    $username = 'demo';
+                }
 
             } else {
                 // Handle decoding error
@@ -144,7 +280,7 @@ class taskManagement{
         //         $starting_time = htmlspecialchars($_POST["starting_time"]); 
         //         $ending_time = htmlspecialchars($_POST["ending_time"]); 
                 
-        $ret = task_model::add($task_name, $task_description, $task_type, $starting_time, $ending_time);                
+        $ret = task_model::add($task_name, $task_description, $task_type, $starting_time, $ending_time, $username);                
         //         echo $ret;
 
 
