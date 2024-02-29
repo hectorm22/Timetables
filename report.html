@@ -7,13 +7,99 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <style> 
+            #piechart { 
+                display: block; 
+                width: 250px; 
+                height: 250px; 
+                border-radius: 50%; 
+                /* background: conic-gradient( 
+                    red 12deg, 
+                    orange 0deg 25deg, 
+                    yellow 0deg 240deg, 
+                    lightblue 0deg 270deg,
+                    #eaeaea 0deg 0deg
+                ); */
+            }
+      
+            body, #piechart { 
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+            } 
+        </style> 
     </head>
     <body>
         <div class="container">
+            <h2>Task Report</h2>
+            <div class="col">
+                <!-- replace 'month' and 'username' with the session variable values 'month' and 'username'. -->
+                <div class="row"><h5><span id="report-month">month</span> task report for <span id="report-username">username</span></h5></div>
+                <div class="row">
+                    <div id="piechart"></div> 
+                </div>
+                <br>
+                <div class="row align-items-center">
+                    <span id="total-tasks" style="font-weight:bold">0</span>
+                </div>
+                <div class="row align-items-center">
+                    <span class="mr-2" style="background-color: red; width: 15px; height: 15px;"></span>Completed Tasks:&nbsp;<span id="completed-percent">0%</span>
+                </div>
+                <div class="row align-items-center">
+                    <span class="mr-2" style="background-color: orange; width: 15px; height: 15px;"></span>Incomplete Tasks:&nbsp;<span id="incomplete-percent">0%</span>
+                </div>
+                <div class="row align-items-center">
+                    <span class="mr-2" style="background-color: green; width: 15px; height: 15px;"></span>Reminding Tasks In-progress:&nbsp;<span id="in-progress0-percent">0%</span>
+                </div>
+                <div class="row align-items-center">
+                    <span class="mr-2" style="background-color: violet; width: 15px; height: 15px;"></span>Expiring Tasks In-progress:&nbsp;<span id="in-progress1-percent">0%</span>
+                </div>
+                <div class="row align-items-center">
+                    <span class="mr-2" style="background-color: lightblue; width: 15px; height: 15px;"></span>Task Changes:&nbsp;<span id="changes-percent">0%</span>
+                </div>
+                <br>
+                <!-- <button id="form-submit-btn" class="btn btn-primary" type="submit">Close Report</button> -->
+            </div>
         </div>
     </body>
 </html>
 <script>
-    $(document).ready(function(){
+    $(document).ready(function()
+    {
+        $.ajax({
+            type: "GET",
+            url: "https://cs.csub.edu/~flin/3350/lab05/index.php?controller=taskManagement&action=showSummary",
+            success: function(data) {
+                console.log("received: " + JSON.stringify(data));
+
+                let total = data[0].total;
+
+                // percentages
+                let done = data[1].done / total;
+                let incomplete = data[1].done / total;
+                let inProgressReminder = data[3].progType0 / total;
+                let inProgressExpiring = data[4].progType1 / total;
+                let changed = 0 / total; // data[5].taskChanges / total;
+
+                // angles
+                let a = done * 360;
+                let b = incomplete * 360;
+                let c = (inProgressReminder * 360) / 2;
+                let d = (inProgressExpiring * 360) / 2;
+                let e = changed * 360;
+
+                $("#piechart").css("background", `conic-gradient(red ${a}deg, orange 0deg ${a+b}deg, green 0deg ${a+b+c}deg, violet 0deg ${a+b+c+d}deg, lightblue 0deg ${a+b+c+d+e}deg)`);
+                $("#completed-percent").text((done * 100).toFixed(1) + "%");
+                $("#incomplete-percent").text((incomplete * 100).toFixed(1) + "%");
+                $("#in-progress0-percent").text((inProgressReminder * 100).toFixed(1) + "%");
+                $("#in-progress1-percent").text((inProgressExpiring * 100).toFixed(1) + "%");
+                $("#changes-percent").text((changed * 100).toFixed(1) + "%");
+                $("#total-tasks").text("Total tasks: " + total);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error in AJAX request:", error);
+                alert("Error in AJAX request:\n" + error);
+            }
+        });
     });
 </script>
