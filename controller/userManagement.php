@@ -33,7 +33,7 @@ class userManagement{
                     if (password_verify($password, $stored_password)) {
                     
                         // Password is valid
-                        $_SESSION["username"] = $username;
+                        $_SESSION["loginName"] = $username;
                         header("Location: views/index.php");
                         // header('Content-Type: application/json');
                         // echo json_encode($pw);
