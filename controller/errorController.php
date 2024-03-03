@@ -1,15 +1,9 @@
 <?php
-
-class erro_model{
-
-    function error(){
-        echo "Pages not exist";
-
+    class erro_model
+    {
+        function error()
+        {
+            echo "Unknown action.";
+        }
     }
-
-
-}
-
 ?>
-
-

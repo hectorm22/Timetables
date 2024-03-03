@@ -1,21 +1,47 @@
-<!-- a simple view returning json data -->
-<?php
+<?php include_once("header.php"); ?>
 
-include "header.php";
-echo "<h3 style=\"text-align: center;\">User added</h3>";
+<script>sessionStorage.clear()</script>
+<article>
+    <!-- Form for submit -->
+    <h3>New User</h3>
+    <form id="add-form">
+        <h6>New Username: </h6>
+        <input type="text" placeHolder="Enter username" id="username" name="username" required/>
+        <br>
+        <br>
+        <h6>New Password: </h6>
+        <input type="password" placeholder="password" id="userPIN" name='password' required/></br></br>
+        <input class="btn" id="add-submit" type="submit" name="login_submit" value="Submit" />
+        <button class="btn" onclick="document.location.href = '../index.php'" >Cancel</button>
+    </form>
+</article>
+<script>
+    function submit()
+    {
+        event.preventDefault();
 
-// Check if the session variable is set
-if (isset($_SESSION['addUserData'])) {
-    $userData = $_SESSION['addUserData'];
-    echo "username: " .$userData['username']. "<br>";
-    echo "password: " .$userData['password']. "<br>";
-    //$jsonData = json_encode($userData, true);
+        let formData = Object.fromEntries(new FormData(document.getElementById("add-form")).entries());
 
-    //displayJsonAsTable($jsonData);
-    //echo "Username: " . $userData['username'] . "<br>";
-    //echo "Password: " . $userData['password'] . "<br>";
+        for (const key in formData) {
+            if (formData[key].length == 0) {
+                alert(`Missing field: ${key} `)
+                return;
+            }
+        }
+        
+        $.ajax({
+            type: "post",
+            url: `../index.php?controller=userManagement&action=add&username=${formData.username}&password=${formData.password}`,
+            success: function(response) {
+                document.location.href="login.php?success=1";
+            },
+            error: function(xhr, status, error) {
+                console.error("Error in AJAX request:", xhr.responseText);
+            }
+        });
+    }
 
-}
+    $("#add-submit").click(submit);
+</script>
 
-include "footer.php";
-?>
+<?php include_once("footer.php"); ?>

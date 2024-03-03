@@ -1,12 +1,6 @@
 <?php 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-    //header("Location: login.php");
-}
-else{
-    $username=$_SESSION["username"];
-}
-
+    if (session_status() == PHP_SESSION_NONE)
+        session_start();
 ?>
 
 <!doctype html>
@@ -18,29 +12,30 @@ else{
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <title>Tasks Builder!</title>
+    <title>TimeTables</title>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-blue bg-dark" >
-    <div class="collapse navbar-collapse" id="navbarNav"  >
+<nav class="navbar navbar-expand bg-dark" >
+    <div id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="../index.php?controller=userManagement&action=all">All Users</span></a>
+                <h3 class="text-warning mr-3">TimeTables</h3>
             </li>
 
-            <li class="nav-item active">
-                <a class="nav-link">Login User: <?php echo $username; ?></span></a>
-            </li>
+            <?php
+                if (isset($_SESSION["loggedIn"]))
+                {
+                    echo '
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="logout.php">Log out</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-warning">Logged-in as: '. $_SESSION["loginName"] .'</span></a>
+                    </li>';
+                }
+            ?>
         </ul>
     </div>
 </nav>
-
-<div class="container " >
-    <div class="row">
-        <div class="col">
-            <h1 style="text-align: center;">Lab05 - Tasks Buider</h1>
-        </div>
-    </div>
-</div>
 

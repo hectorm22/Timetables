@@ -1,94 +1,65 @@
 <?php
-
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 
 class userManagement{
-    
-    function home(){
-
-        //header("views/logout.php");
-        require_once("views/login.php");
+    function home()
+    {
+        header("Location: views/login.php");
+        die();
     }
     
     //Check Login
-    function checkLogin(){
+    function checkLogin()
+    {
+        if (session_status() == PHP_SESSION_NONE)
+            session_start();
+
         // Retrieve the username from the query parameters
         if ($_SERVER["REQUEST_METHOD"] === "POST"){
-        //if (isset($_POST["login_submit"])){
             if(isset($_POST["username"]) && isset($_POST["userPIN"]) ) {
                 $username = htmlspecialchars($_POST["username"]);
                 $password = htmlspecialchars($_POST["userPIN"]);
-
+                
                 try{
                     $pw=user_model::get_password($username);
+                    
+                    if (!$pw)
+                    {
+                        // credential failure
+                        header("Location: views/login.php?failure=1");
+                        die();
+                    }
+
                     $stored_password = $pw[0]['password'];
 
                     // Validate password entered by user
                     if (password_verify($password, $stored_password)) {
-                    
-                        // Password is valid
+                        // Password is valid, set up session variables.
+                        $_SESSION["loggedIn"] = true;
                         $_SESSION["loginName"] = $username;
+
                         header("Location: views/index.php");
-                        // header('Content-Type: application/json');
-                        // echo json_encode($pw);
+                        die();
                     } 
                     else {
                         // Password is invalid
-                        echo "Login again";
-          
+                        header("Location: views/login.php?failure=1");
+                        die();
                     } 
                 }
                 catch (Exception $e) {
-                        http_response_code(500); // Internal Server Error
-                        echo json_encode(['error' => $e->getMessage()]);
-                    }
-
-
+                    http_response_code(500); // Internal Server Error
+                    echo json_encode(['error' => $e->getMessage()]);
+                }
             }
             else{
                 echo 'null';
             }
-        }else{
-            echo "error";
         }
-
-
-    }
-
-
-    //return all the users
-    function all(){
-        //use the model to get all the comments from the database
-        $users=user_model::all();
-        
-        // Usage
-        $json_users = json_encode($users, true);
-        // displayJsonAsTable($users);
-
-        // First PHP file
-        $_SESSION['userData'] = $json_users;
-    
-        require_once("views/showUsers.php");
-        //header("Location: views/showUsers.php");
-    }
-
-    //AJAX
-    function showAll(){
-        try{
-            $users=user_model::all();
-        
-            header('Content-Type: application/json');
-            echo json_encode($users);
-        
-        } catch (Exception $e) {
-            http_response_code(500); // Internal Server Error
-            echo json_encode(['error' => $e->getMessage()]);
+        else{
+            echo "error";
         }
     }
 
@@ -114,8 +85,6 @@ class userManagement{
             }
     }
 
-
-
     //delete a user
     function delete(){
         //read the id passed over query string
@@ -129,10 +98,6 @@ class userManagement{
         else{
             echo "null";
         }
-            
-
-        
-        //require_once("view/deleteUser.php");
     }
 
 //**********************************************
@@ -141,25 +106,21 @@ class userManagement{
     //add a user
     function add(){
         // Get the raw JSON data from the request body
-        
-        if ($_SERVER["REQUEST_METHOD"] === "POST"){
-            if(isset($_POST["username"]) && isset($_POST["password"]) ) {
-                $name = htmlspecialchars($_POST["username"]);
-                $pw = htmlspecialchars($_POST["password"]);    
+        if ($_SERVER["REQUEST_METHOD"] === "POST")
+        {
+            if(isset($_GET["username"]) && isset($_GET["password"]) )
+            {
+                $name = htmlspecialchars($_GET["username"]);
+                $pw = htmlspecialchars($_GET["password"]);    
                 $hassed_pass = password_hash($pw, PASSWORD_DEFAULT); 
                 
-                $ret = user_model::add($name, $hassed_pass);                
-                echo $ret;
-
-
-            }else{
-
-                echo 'add error';
-           }
-        }
-        else{
-            echo 'test';
-            require_once("views/add.php");
+                user_model::add($name, $hassed_pass);
+            }
+            else
+            {
+                http_response_code(500); // Internal Server Error
+                echo json_encode(['error' => "username and/or password fields must be present."]);
+            }
         }
     }
 

@@ -1,40 +1,32 @@
-# Timetables
+# **Timetables**
+A web-based schedule builder for creating, modifying, updating and deleting your everyday activities.
 
+## Synopsis
+Keeping track of your everyday activites becomes hefty especially having to memorize current and upcoming activities. Organization becomes an attractive
+choice for managing many activities.
 
-# ServerSide Framework
-<hr>
+Timetables was created to help with managing activites on all levels. Although it offers the most basic functionality for schedule management, it is sufficient
+enough for anyone to use within their means.
 
-***This is a simple serverside framework in PHP that implements all the basic features of web programming..***
+## Getting Started
+To get started, log into your Odin account and navigate to the `public_html` directory. If such directory does not exist, make one using this command: `mkdir public_html`. Navigate
+into the directory.<br>
 
-The framework will use [controller] and [action] to operator the web routes. When controller and action are NULL, <br>
-the route will guide to the default site. Only [controller] and [action] meet the definition of the router, and   <br>
-the requests will be operated by the server side.
+Once inside the `public_html` folder, download the latest release using this command:<br>
 
-Goal: improve the work efficience. When the group defines the data format, it will be convient to cooperate with each <br>
-other 
+`git clone "https://github.com/hectorm22/Timetables.git" Timetables`. This will create a directory containing the release. Do not navigate into the `Timetables` directory yet.<br>
 
-# Define Objects Right Now
+The application needs read and write permissions for error logging and database querying purposes. To change its permissions, execute these commands in order:<br>
+1. `chmod o+rw ..\public_html`<br>
+2. `chmod -R o+rw Timetables`<br>
 
-- DB class: simplify the sqlite operation (https://github.com/DiseaseNO/PDO-SQLite-Class)
-- userManagerment class: receive the API operations of userManagement
-- user_model class: the functions of the CRUD of user management  
+Then, navigate into the `Timetables` directory.
 
-# Functions and API
+The application has now been setup and ready to be used. In a web browser, visit your CSUB Odin account URL:<br>
 
-## API Test
+`cs.csub.edu/~<username>/Timetables`<br>
 
-- default: '/', it redirects the views/index.php
-- all: "../index.php?controller=userManagement&action=all". It will get all users by JSON format.
-- showAll: "../index.php?controller=userManagement&action=showAll". Return all users by JSON format to AJAX
-- add: "../index.php?controller=userManagement&action=add". Post data to API and insert them into databae
-- showPassword: "../index.php?controller=userManagement&action=showPassword". Get username and return password to AJAX
-- delete: "../index.php?controller=userManagement&action=delete". Get userid and execute delete operation by AJAX 
+Replace `<username>` with your Odin username and hit enter.<br><br>
 
-## Functions
-
-- displayJsonAsTable: help to test data
-- function all(): query user data
-- function get_password():
-- function delete($id):
-- function add($name, $password):
-
+## Maintainers and Contributors
+Fang Lin and Hector Martinez
