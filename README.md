@@ -44,10 +44,10 @@ If you need to manually reset the database, execute `./sqlite3`, run `.read setu
 
 ## Frequently Asked Questions (FAQ)
 ### Q: Why does this application feel janky, sub-par, minimalistic, bland, barrel-scraping and seems doomed to failure?
-### **A: Because it was considered a "mini project" that was written within a limited time frame. Expect some unorthodox behavior.**<br><br>
+**A: Because it was considered a "mini project" that was written within a limited time frame. Expect some unorthodox behavior.**<br><br>
 
 ### Q: Timetables is thowing around errors, but I cannot see them in the log file!
-### **A: You need to setup the proper permissions to allow read and write access to the `errors.txt` file. Refer to [this](README.md#getting-started) section.**<br><br>
+**A: You need to setup the proper permissions to allow read and write access to the `errors.txt` file. Refer to [this](README.md#getting-started) section.**<br><br>
 
 ## Contributors
 Fang Lin and Hector Martinez
