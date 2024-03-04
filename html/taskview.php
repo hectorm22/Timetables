@@ -52,9 +52,7 @@
 <div id="desc" class="row justify-content-center">
 </div>
 <div class="row justify-content-center mt-2">
-    <form class="mr-1" action="index.php?page=calendar" method="post">
-        <input type="submit" class="btn btn-secondary" value="Calendar View">
-    </form>
+    <button class="btn btn-secondary" onclick="document.location.href='index.php?page=calendar'">Calendar View</button>
 </div>
 <script>
     function initializeTasks()
