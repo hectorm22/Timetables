@@ -23,7 +23,7 @@
     </div>
     <br>
     <div class="row align-items-center justify-content-center">
-        <span id="total-tasks" style="font-weight:bold">0</span>
+        <span id="total-tasks" style="font-weight:bold"></span>
     </div>
     <div class="row align-items-center justify-content-center">
         <span class="mr-2" style="background-color: red; width: 15px; height: 15px;"></span>Completed Tasks:&nbsp;<span id="completed-percent">0%</span>
