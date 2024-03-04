@@ -41,12 +41,15 @@
             echo '<button id="form-update-btn" class="btn btn-warning">Update</button>';
             echo '<input form="task-form" type="text" name="task_id" value="'. $_GET["id"] .'" hidden>';
             echo '<input form="task-form" type="text" name="username" value="'. $_SESSION["loginName"] .'" hidden>';
+            echo '<button class="btn btn-secondary ml-2" onclick="document.location.href=\'index.php?page=taskView&date='. $_SESSION['selected_calendar_date'] .'\'">Cancel</button>';
         }
         else
+        {
             echo '<button id="form-submit-btn" class="btn btn-primary">Create</button>';
+            echo '<button class="btn btn-secondary ml-2" onclick="document.location.href=\'index.php?page=calendar\'">Cancel</button>';
+        }
             
     ?>
-    <button class="btn btn-secondary" onclick="document.location.href='index.php?page=taskView&date=<?= $_SESSION['selected_calendar_date'] ?>'">Cancel</button>
 </div>
 <script>
     let isEditing = <?= $isEditing == true ? "true" : "false" ?>;
