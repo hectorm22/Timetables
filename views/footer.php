@@ -1,6 +1,6 @@
 <!-- Footer -->
 <footer class="page-footer font-small" style="
-        position: fixed;
+        margin-top: 10px;
         left: 0;
         bottom: 0;
         width: 100%;
